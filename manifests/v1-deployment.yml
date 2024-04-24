@@ -15,7 +15,6 @@ spec:
     metadata:
       labels:
         app: health-checker
-      namespace: health-checker
     spec:
       containers:
         - name: health-checker
@@ -40,7 +39,6 @@ spec:
             tcpSocket:
               port: 8000
             timeoutSeconds: 1
-      dnsPolicy: ClusterFirst
       hostname: health-checker
       restartPolicy: Always
       securityContext: {}
