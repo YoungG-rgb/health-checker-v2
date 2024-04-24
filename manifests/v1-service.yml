@@ -9,4 +9,4 @@ spec:
   selector:
     app: health-checker
   sessionAffinity: None
-  type: NodePort
+  type: ClusterIP
