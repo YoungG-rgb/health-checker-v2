@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hc-app
+  name: health-checker
   labels:
-    app: hc-app
+    app: health-checker
 spec:
   progressDeadlineSeconds: 600
   replicas: 2
@@ -22,7 +22,7 @@ spec:
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 90
+            initialDelaySeconds: 30
             periodSeconds: 10
             successThreshold: 1
             tcpSocket:
@@ -32,7 +32,7 @@ spec:
             - containerPort: 8000
           readinessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 90
+            initialDelaySeconds: 30
             periodSeconds: 10
             successThreshold: 1
             tcpSocket:
