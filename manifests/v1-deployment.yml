@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: health-checker
+  name: hc-app
   labels:
-    app: health-checker
+    app: hc-app
 spec:
   progressDeadlineSeconds: 600
   replicas: 2
@@ -30,7 +30,6 @@ spec:
             timeoutSeconds: 1
           ports:
             - containerPort: 8000
-              protocol: TCP
           readinessProbe:
             failureThreshold: 3
             initialDelaySeconds: 90
