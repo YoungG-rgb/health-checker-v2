@@ -38,6 +38,33 @@ spec:
             tcpSocket:
               port: 8000
             timeoutSeconds: 1
+          env:
+            - name: EMAIL_SOURCE
+              valueFrom:
+                configMapKeyRef:
+                  key: email_source
+                  name: health-checker-cm
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: db_username
+                  name: health-checker-secret
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: db_password
+                  name: health-checker-secret
+          volumeMounts:
+            - mountPath: "/config"
+              name: config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: health-checker-cm
+        - name: secrets
+          secret:
+            secretName: health-checker-secret
       hostname: health-checker
       restartPolicy: Always
       securityContext: {}
