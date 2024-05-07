@@ -42,6 +42,7 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 8000
+  targetPort: 8000
 
 ingress:
   enabled: false
@@ -53,7 +54,7 @@ ingress:
     - host: chart-example.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
