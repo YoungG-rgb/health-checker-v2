@@ -8,6 +8,13 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+    {{- if eq "RollingUpdate" .Values.strategy.type }}
+    rollingUpdate:
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge | default "1" }}
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable | default "0" }}
+      {{- end}}
   selector:
     matchLabels:
       {{- include ".helm.selectorLabels" . | nindent 6 }}
