@@ -7,7 +7,7 @@ replicaCount: 2
 image:
   repository: jakotoychubaev/young-rgb
   pullPolicy: IfNotPresent
-  tag: v3
+  tag: v4
 
 imagePullSecrets: []
 nameOverride: ""

@@ -1,0 +1,14 @@
+{{- $labels := include ".helm.labels" . -}}
+{{- if .Values.configMaps -}}
+{{- range $cm := .Values.configMaps }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $cm.name }}
+  labels:
+{{  $labels | indent 4 }}
+data:
+  {{- toYaml $cm.values  | nindent 2 }}
+{{- end }}
+{{- end }}
