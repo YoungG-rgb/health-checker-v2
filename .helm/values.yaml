@@ -63,4 +63,17 @@ readinessProbe:
     port: 8000
   timeoutSeconds: 1
 
+postgresql:
+  builtin: true
+  auth:
+    password: "admin"
+    username: "admin"
+#    secretKeys:
+#      adminPasswordKey:
+#      userPasswordKey:
+#      replicationPasswordKey:
+#    existingSecret: SecretName
+#  metrics:
+#    enabled: false
+
 
