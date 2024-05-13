@@ -17,10 +17,6 @@ spec:
     spec:
       template:
         spec:
-          {{- with .imagePullSecrets }}
-          imagePullSecrets:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
           restartPolicy: Never
           containers:
             - name: cron-job-container

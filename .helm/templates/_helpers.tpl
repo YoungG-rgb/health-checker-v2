@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define ".helm.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default .Chart.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -48,15 +48,4 @@ Selector labels
 {{- define ".helm.selectorLabels" -}}
 app.kubernetes.io/name: {{ include ".helm.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define ".helm.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include ".helm.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
 {{- end }}

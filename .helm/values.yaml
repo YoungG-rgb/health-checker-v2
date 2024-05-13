@@ -2,33 +2,26 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+application:
+  replicaCount: 2
+  podAnnotations: {}
+  image:
+    repository: jakotoychubaev/young-rgb
+    tag: v4
+  resources:
+    limits:
+      cpu: "0.1"
+      memory: "400Mi"
+    requests:
+      cpu: "0.1"
+      memory: "200Mi"
+  environments: []
 
-image:
-  repository: jakotoychubaev/young-rgb
-  pullPolicy: IfNotPresent
-  tag: v4
 
 imagePullSecrets: []
 nameOverride: ""
 configMaps: ""
 cronJobs: ""
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-podAnnotations: {}
-podLabels: {}
-podSecurityContext: {}
-securityContext: {}
 
 service:
   type: ClusterIP
@@ -47,7 +40,6 @@ ingress:
         - path: /
           pathType: Prefix
 
-resources: {}
 strategy:
   type: RollingUpdate
   rollingUpdate:
@@ -71,18 +63,4 @@ readinessProbe:
     port: 8000
   timeoutSeconds: 1
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-
-# Additional volumes on the output Deployment definition.
-volumes: []
-volumeMounts: []
-tolerations: []
-nodeSelector: {}
-affinity: {}
-
-env:
 
