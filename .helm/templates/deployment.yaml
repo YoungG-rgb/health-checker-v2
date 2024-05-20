@@ -34,15 +34,31 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: {{ .Values.application.targetPort | default "8000" }}
+            timeoutSeconds: 1
           readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: {{ .Values.application.targetPort | default "8000" }}
           resources:
             {{- toYaml .Values.application.resources | nindent 12 }}
-          volumeMounts:
-            - name: config
-              mountPath: /etc/nginx/conf.d/
-      volumes:
-        - name: config
-          configMap:
-            name: {{ include ".helm.chart" . }}-conf
+          env:
+            - name: DB_SVC_NAME
+              value: {{ .Release.Name }}-postgresql
+          {{- range $name, $value := $.Values.application.environments }}
+          {{- if not (empty $value) }}
+            - name: {{ $name | quote }}
+              value: {{ $value | quote }}
+          {{- end}}
+          {{- end}}
+          {{- if not (empty $.Values.application.secretEnv) }}
+            {{- toYaml $.Values.application.secretEnv | nindent 12 }}
+          {{- end}}

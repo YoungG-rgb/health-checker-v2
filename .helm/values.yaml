@@ -3,11 +3,12 @@
 # Declare variables to be passed into your templates.
 
 application:
+  targetPort: 8000
   replicaCount: 2
   podAnnotations: {}
   image:
     repository: jakotoychubaev/young-rgb
-    tag: v4
+    tag: v5
   resources:
     limits:
       cpu: "0.1"
@@ -15,7 +16,22 @@ application:
     requests:
       cpu: "0.1"
       memory: "200Mi"
-  environments: []
+  environments:
+    DB_NAME: "health_checker"
+    SERVER_PORT: 8000
+    DB_USERNAME: "health_checker"
+    DB_PASSWORD: "password"
+  secretEnv:
+    - name: DB_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: health-checker
+          key: DB_USERNAME
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: health-checker
+          key: DB_PASSWORD
 
 
 imagePullSecrets: []
@@ -32,8 +48,6 @@ ingress:
   enabled: true
   className: nginx
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
     - host: arch.homework
       paths:
@@ -46,34 +60,34 @@ strategy:
     maxSurge: "1"
     maxUnavailable: "0"
 
-livenessProbe:
-  failureThreshold: 3
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  successThreshold: 1
-  tcpSocket:
-    port: 8000
-  timeoutSeconds: 1
-readinessProbe:
-  failureThreshold: 3
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  successThreshold: 1
-  tcpSocket:
-    port: 8000
-  timeoutSeconds: 1
-
 postgresql:
+  postgresUser: "health_checker"
+  postgresDBName: "health_checker"
+  postgresPassword: "password"
   builtin: true
   auth:
-    password: "admin"
-    username: "admin"
-#    secretKeys:
-#      adminPasswordKey:
-#      userPasswordKey:
-#      replicationPasswordKey:
-#    existingSecret: SecretName
-#  metrics:
-#    enabled: false
+    postgresPassword: "password"
+  shmVolume:
+    sizeLimit: "1Gi"
+  primary:
+    resources:
+      limits:
+        memory: "1Gi"
+        cpu: "1000m"
+      requests:
+        memory: "1Gi"
+        cpu: "1000m"
+      persistence:
+        enabled: true
+        storageClass: "standard"
+        size: "1Gi"
+  readReplicas:
+    persistence:
+      enabled: true
+      storageClass: "standard"
+      size: "1Gi"
 
-
+jobInitDb:
+  image: postgres
+  tag: 12.17-alpine3.19
+  imgPullPolicy: IfNotPresent

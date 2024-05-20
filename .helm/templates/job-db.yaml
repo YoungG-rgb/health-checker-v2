@@ -1,0 +1,58 @@
+{{- if .Values.postgresql.builtin }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: &job_name {{ .Chart.Name }}-init-db
+spec:
+  template:
+    metadata:
+      name: *job_name
+      labels:
+        {{- include ".helm.labels" . | nindent 8 }}
+
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: *job_name
+          image: {{ .Values.jobInitDb.image }}:{{ .Values.jobInitDb.tag }}
+          imagePullPolicy: {{ .Values.jobInitDb.imgPullPolicy }}
+          env:
+            - name: PG_HOST
+              value: {{ .Release.Name }}-postgresql
+            - name: PG_PORT
+              value: "5432"
+            - name: PG_DB
+              value: {{ .Values.postgresql.postgresDBName }}
+            - name: PG_USER
+              value: {{ .Values.postgresql.postgresUser }}
+            - name: PGPASSWORD
+              value: {{ .Values.postgresql.postgresPassword }}
+            - name: PG_USER_PASSWORD
+              value: {{ .Values.postgresql.postgresPassword }}
+          command:
+            - bash
+            - -ec
+            - |
+              export PSQL_COMMAND="psql -w -U postgres -d postgres -h $PG_HOST -p $PG_PORT"
+              echo "Test connection"
+              $PSQL_COMMAND -tc '\du'
+
+              # Test or create db
+              $PSQL_COMMAND -lqt | cut -d \| -f 1 | grep -qw $PG_DB || \
+              $PSQL_COMMAND -c "create database $PG_DB"
+
+              # Test or create user
+              $PSQL_COMMAND -tc '\du' | cut -d \| -f 1 | grep -qw $PG_USER || \
+              $PSQL_COMMAND -c "create user $PG_USER with encrypted password '$PG_USER_PASSWORD'"
+
+              $PSQL_COMMAND -tc '\l'
+              $PSQL_COMMAND -tc '\dt'
+              # Grant
+              $PSQL_COMMAND -c "grant all privileges on database $PG_DB to $PG_USER"
+
+              # pgcrypto
+              export PSQL_COMMAND="psql -w -U postgres -d $PG_DB -h $PG_HOST -p $PG_PORT"
+              $PSQL_COMMAND -c '\dx' | grep -qw pgcrypto || \
+              $PSQL_COMMAND -c "CREATE EXTENSION pgcrypto"
+
+{{- end }}
