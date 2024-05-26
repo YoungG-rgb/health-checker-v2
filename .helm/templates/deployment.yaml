@@ -35,7 +35,7 @@ spec:
               protocol: TCP
           livenessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 30
+            initialDelaySeconds: 90
             periodSeconds: 10
             successThreshold: 1
             tcpSocket:
@@ -43,8 +43,8 @@ spec:
             timeoutSeconds: 1
           readinessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 5
-            periodSeconds: 5
+            initialDelaySeconds: 90
+            periodSeconds: 10
             successThreshold: 1
             tcpSocket:
               port: {{ .Values.application.targetPort | default "8000" }}

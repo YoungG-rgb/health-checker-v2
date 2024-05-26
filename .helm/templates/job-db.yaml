@@ -22,13 +22,13 @@ spec:
             - name: PG_PORT
               value: "5432"
             - name: PG_DB
-              value: {{ .Values.postgresql.postgresDBName }}
+              value: {{ .Values.postgresql.auth.database }}
             - name: PG_USER
-              value: {{ .Values.postgresql.postgresUser }}
+              value: {{ .Values.postgresql.auth.username }}
             - name: PGPASSWORD
-              value: {{ .Values.postgresql.postgresPassword }}
+              value: {{ .Values.postgresql.auth.password }}
             - name: PG_USER_PASSWORD
-              value: {{ .Values.postgresql.postgresPassword }}
+              value: {{ .Values.postgresql.auth.password }}
           command:
             - bash
             - -ec
@@ -36,6 +36,8 @@ spec:
               export PSQL_COMMAND="psql -w -U postgres -d postgres -h $PG_HOST -p $PG_PORT"
               echo "Test connection"
               $PSQL_COMMAND -tc '\du'
+
+              $PSQL_COMMAND -U $PG_USER -tc "GRANT CREATE ON SCHEMA public TO PUBLIC;" || true
 
               # Test or create db
               $PSQL_COMMAND -lqt | cut -d \| -f 1 | grep -qw $PG_DB || \

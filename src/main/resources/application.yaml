@@ -2,13 +2,13 @@ spring:
   application:
     name: health-checker
   datasource:
-    url: jdbc:postgresql://${DB_SVC_NAME}/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://${DB_SVC_NAME:health-checker-app-postgresql}/${DB_NAME:health_checker}
+    username: ${DB_USERNAME:health_checker}
+    password: ${DB_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
 
 server:
-  port: ${SERVER_PORT}
+  port: ${SERVER_PORT:8000}

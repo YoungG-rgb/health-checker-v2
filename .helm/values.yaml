@@ -8,7 +8,7 @@ application:
   podAnnotations: {}
   image:
     repository: jakotoychubaev/young-rgb
-    tag: v5
+    tag: v11
   resources:
     limits:
       cpu: "0.1"
@@ -20,25 +20,14 @@ application:
     DB_NAME: "health_checker"
     SERVER_PORT: 8000
     DB_USERNAME: "health_checker"
-    DB_PASSWORD: "password"
   secretEnv:
-    - name: DB_USERNAME
+    - name: password
       valueFrom:
         secretKeyRef:
-          name: health-checker
-          key: DB_USERNAME
-    - name: DB_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: health-checker
-          key: DB_PASSWORD
+          name: db-config-secret
+          key: password
 
-
-imagePullSecrets: []
 nameOverride: ""
-configMaps: ""
-cronJobs: ""
-
 service:
   type: ClusterIP
   port: 8000
@@ -61,12 +50,11 @@ strategy:
     maxUnavailable: "0"
 
 postgresql:
-  postgresUser: "health_checker"
-  postgresDBName: "health_checker"
-  postgresPassword: "password"
   builtin: true
   auth:
-    postgresPassword: "password"
+    username: health_checker
+    database: health_checker
+    password: password
   shmVolume:
     sizeLimit: "1Gi"
   primary:

@@ -1,6 +1,7 @@
 package tech.group.healthchecker.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tech.group.healthchecker.entities.User;
 import tech.group.healthchecker.repositories.UserRepository;
@@ -8,6 +9,7 @@ import tech.group.healthchecker.services.UserService;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -19,7 +21,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) {
+    public User updateById(User user, Long userId) {
+        user.setId(userId);
         return userRepository.save(user);
     }
 
