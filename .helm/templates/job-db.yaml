@@ -49,6 +49,19 @@ spec:
               $PSQL_COMMAND -lqt | cut -d \| -f 1 | grep -qw $PG_DB || \
               $PSQL_COMMAND -c "create database $PG_DB"
 
+              # Test or migration tables
+              $PSQL_COMMAND -lqt | cut -d \| -f 1 | grep -qw $PG_DB || \
+              $PSQL_COMMAND -c "CREATE TABLE IF NOT EXISTS users (
+                                  id serial NOT NULL,
+                                  username varchar(255),
+                                  firstName varchar(255),
+                                  lastName varchar(255),
+                                  email varchar(255),
+                                  phone varchar(255),
+                                  PRIMARY KEY (id)
+                                  )"
+              $PSQL_COMMAND -c "\dt"
+
               # Test or create user
               $PSQL_COMMAND -tc '\du' | cut -d \| -f 1 | grep -qw $PG_USER || \
               $PSQL_COMMAND -c "create user $PG_USER with encrypted password '$PG_USER_PASSWORD'"
