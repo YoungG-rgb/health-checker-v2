@@ -51,8 +51,6 @@ spec:
           resources:
             {{- toYaml .Values.application.resources | nindent 12 }}
           env:
-            - name: DB_SVC_NAME
-              value: {{ .Release.Name }}-postgresql
           {{- range $name, $value := $.Values.application.environments }}
           {{- if not (empty $value) }}
             - name: {{ $name | quote }}

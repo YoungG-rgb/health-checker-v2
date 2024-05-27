@@ -2,9 +2,9 @@ spring:
   application:
     name: health-checker
   datasource:
-    url: jdbc:postgresql://${DB_SVC_NAME:health-checker-app-postgresql}/${DB_NAME:health_checker}
-    username: ${DB_USERNAME:health_checker}
-    password: ${DB_PASSWORD:password}
+    url: jdbc:postgresql://${DB_SVC_NAME}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

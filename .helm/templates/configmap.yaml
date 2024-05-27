@@ -5,8 +5,8 @@ metadata:
   labels:
     {{- include ".helm.labels" . | nindent 4 }}
 data:
-  DB_NAME: "{{- .Values.postgresql.auth.database }}"
-  DB_SVC_NAME: {{ .Release.Name }}-postgresql
-  DB_USERNAME: "{{- .Values.postgresql.auth.username }}"
+  DB_NAME: "{{- .Values.application.environments.DB_NAME }}"
+  DB_SVC_NAME: "{{ .Values.application.environments.DB_SVC_NAME }}"
+  DB_USERNAME: "{{- .Values.application.environments.DB_USERNAME }}"
   SERVER_PORT: "8000"
 

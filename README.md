@@ -1,12 +1,8 @@
-### Add secret
-```
-kubectl create secret generic db-config-secret --from-literal=postgres-password=password --from-literal=password=password
-```
-
-### App install
+### 1) App install
 ```bash
 helm install health-checker-app .helm
 ```
+### 2) Enable minikube tunnel
 ```bash
 minikube tunnel
 ```

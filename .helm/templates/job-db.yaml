@@ -22,13 +22,19 @@ spec:
             - name: PG_PORT
               value: "5432"
             - name: PG_DB
-              value: {{ .Values.postgresql.auth.database }}
+              value: {{ .Values.application.environments.DB_NAME }}
             - name: PG_USER
-              value: {{ .Values.postgresql.auth.username }}
+              value: {{ .Values.application.environments.DB_USERNAME }}
             - name: PGPASSWORD
-              value: {{ .Values.postgresql.auth.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.application.environments.DB_SVC_NAME }}
+                  key: postgres-password
             - name: PG_USER_PASSWORD
-              value: {{ .Values.postgresql.auth.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.application.environments.DB_SVC_NAME }}
+                  key: postgres-password
           command:
             - bash
             - -ec

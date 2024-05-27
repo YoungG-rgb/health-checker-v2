@@ -8,24 +8,25 @@ application:
   podAnnotations: {}
   image:
     repository: jakotoychubaev/young-rgb
-    tag: v11
+    tag: v13
   resources:
     limits:
-      cpu: "0.1"
-      memory: "400Mi"
+      cpu: "1"
+      memory: "1Gi"
     requests:
       cpu: "0.1"
       memory: "200Mi"
   environments:
-    DB_NAME: "health_checker"
+    DB_SVC_NAME: health-checker-app-postgresql
+    DB_NAME: "postgres"
     SERVER_PORT: 8000
-    DB_USERNAME: "health_checker"
+    DB_USERNAME: "postgres"
   secretEnv:
-    - name: password
+    - name: DB_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: db-config-secret
-          key: password
+          name: health-checker-app-postgresql
+          key: postgres-password
 
 nameOverride: ""
 service:
@@ -52,8 +53,8 @@ strategy:
 postgresql:
   builtin: true
   auth:
-    username: health_checker
-    database: health_checker
+    username: postgres
+    database: postgres
     password: password
   shmVolume:
     sizeLimit: "1Gi"
