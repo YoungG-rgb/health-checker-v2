@@ -19,4 +19,8 @@ public class HealthController {
         return ResponseEntity.ok(new HealthResponse("OK"));
     }
 
+    @GetMapping("/error-generate")
+    public ResponseEntity<HealthResponse> errorGenerate() throws Exception {
+        throw new Exception("test error");
+    }
 }

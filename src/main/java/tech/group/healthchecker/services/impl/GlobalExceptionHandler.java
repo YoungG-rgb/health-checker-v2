@@ -14,6 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<?> handleAnyException(Exception exception) {
+        log.error(exception.getMessage(), exception);
         return ResponseEntity.internalServerError()
                 .body(ExceptionResponse.of(500, exception.getMessage()));
     }
